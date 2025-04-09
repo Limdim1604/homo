@@ -1,0 +1,20 @@
+General description:
+HOMO-LAT: Human- centric polarity detection in Online Messages Oriented to the Latin American-speaking LGBTQ+ population
+HOMO-LAT is a joint effort by researchers from different Latin American countries to study society's perception of the LGBTQ+ community.
+We have focused on exploring the use of LGBTQ+ language social networks, specifically Reddit, considering subreddits from all Spanish-speaking countries in America. In this way, the different social positions towards the LGBTQ+ community can be addressed.
+The HomoLat 2025 shared task proposes a polarity analysis regarding a set of generic tems used in all Latin American countries. It targets a diverse community of users and offers significant industrial applications. Academics and researchers in NLP and computational linguistics benefit from these tasks by advancing sentiment analysis methods while addressing cultural and linguistic nuances specific to Spanish dialects in Latin America. LGBTQ+ advocacy groups and organizations can leverage these tools to monitor harmful language or sentiment in online discourse, promoting inclusivity and combating discrimination.
+Additionally, policymakers and regulators can use such systems to identify and address hate speech, fostering safer digital spaces. Industrially, polarity detection has wide-ranging applications. Social media platforms can integrate these models to enhance content moderation, flagging and mitigating LGBTQ+ phobic or harmful content. Marketing and advertising sectors can use sentiment analysis to develop culturally sensitive campaigns tailored to LGBTQ+ audiences, ensuring positive engagement. Furthermore, public relations teams and media organizations can use these tools for social listening and sentiment monitoring around LGBTQ+ issues, enabling more informed responses to public opinion and societal trends.
+The task is addressed to the whole community of Latin American researchers and industry practitioners who can additionally study and adapt their applications to different variants of Spanish on the continent.
+
+Description of the task:
+Subtask 1: Multi-dialect polarity detection track (Multi-class).
+The objective of this task is indicate the polarity (positive, negative, neutral) of the post towards the keyword. In this subtask the Spanish dialects of the training are the same than the dialects in evaluation.
+
+Subtask 2: Cross-dialect polarity detection (Multi-labeled).
+The objective of this task is indicate the post's polarity (positive, negative, neutral) towards the keyword. In this subtask the Spanish dialects of the training are not the same as the dialects in evaluation.
+
+Data:
+The corpus for the two tasks, is composed of Reddit posts from Latin American countries (Argentina, Colombia, Chile, Mexico, Uruguay, Panama, Peru, Paraguay, Venezuela, Puerto Rico, Guatemala, Honduras, El Salvador, Dominican Republic, Bolivia, Ecuador, Nicaragua, Cuba and Costa Rica) using the following LGBT terms: gay, lesbian, bisexual, trans, transsexual, transgender, transvestite, asexual, queer, pansexual, intersexual, lgbt, as well as their morphological and orthographic variants.
+
+Evaluation:
+To evaluate the model performance of the participants (ranking) the F1-score will be used. Consider that for the multi-class and the F1 score will be computed as a macro average (macro), for multi-label track the F1 score will be computed as a sample average (samples) and for the binary track the F1 score will be computed as a macro average (macro).
