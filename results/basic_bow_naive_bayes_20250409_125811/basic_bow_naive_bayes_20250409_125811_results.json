@@ -1,0 +1,68 @@
+{
+  "accuracy": 0.574523396880416,
+  "f1_macro": 0.4251001379663364,
+  "f1_weighted": 0.5537208106953077,
+  "class_report": {
+    "NEG": {
+      "precision": 0.5,
+      "recall": 0.5102040816326531,
+      "f1-score": 0.5050505050505051,
+      "support": 392.0
+    },
+    "NEU": {
+      "precision": 0.6390449438202247,
+      "recall": 0.7165354330708661,
+      "f1-score": 0.6755753526354863,
+      "support": 635.0
+    },
+    "POS": {
+      "precision": 0.19047619047619047,
+      "recall": 0.06299212598425197,
+      "f1-score": 0.09467455621301775,
+      "support": 127.0
+    },
+    "accuracy": 0.574523396880416,
+    "macro avg": {
+      "precision": 0.4431737114321384,
+      "recall": 0.4299105468959237,
+      "f1-score": 0.4251001379663364,
+      "support": 1154.0
+    },
+    "weighted avg": {
+      "precision": 0.5424471538269661,
+      "recall": 0.574523396880416,
+      "f1-score": 0.5537208106953077,
+      "support": 1154.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      200,
+      182,
+      10
+    ],
+    [
+      156,
+      455,
+      24
+    ],
+    [
+      44,
+      75,
+      8
+    ]
+  ],
+  "experiment_config": {
+    "preprocessing_pipeline": "basic",
+    "vectorization_method": "bow",
+    "model_name": "naive_bayes",
+    "use_dev_set": false,
+    "use_hyperparameter_tuning": false,
+    "handle_class_imbalance": false,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "execution_time": 1.0476558208465576
+  }
+}
