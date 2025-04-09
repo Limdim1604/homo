@@ -108,50 +108,104 @@ with tab1:
     with col3:
         balance = st.checkbox("Xử lý bất cân bằng dữ liệu", value=False)
     
+    # Chọn các mô hình để so sánh
+    models_to_compare = st.multiselect(
+        "Chọn các mô hình để so sánh:",
+        ["naive_bayes", "logistic_regression", "svm", "linear_svc", "random_forest",
+         "gradient_boosting", "knn", "decision_tree"],
+        default=[model_choice],
+        format_func=lambda x: {
+            "naive_bayes": "Naive Bayes",
+            "logistic_regression": "Logistic Regression",
+            "svm": "Support Vector Machine",
+            "linear_svc": "Linear SVC",
+            "random_forest": "Random Forest",
+            "gradient_boosting": "Gradient Boosting",
+            "knn": "K-Nearest Neighbors",
+            "decision_tree": "Decision Tree"
+        }.get(x, x)
+    )
+    
     # Nút chạy thí nghiệm cơ bản
-    if st.button("Chạy thí nghiệm cơ bản"):
-        with st.spinner("Đang chạy thí nghiệm..."):
+    if st.button("Chạy thí nghiệm cơ bản") and models_to_compare:
+        with st.spinner("Đang chạy thí nghiệm với các mô hình đã chọn..."):
             try:
-                experiment_results = run_experiment(
-                    preprocessing_pipeline=preprocessing_pipeline,
-                    vectorization_method=vectorization_method,
-                    model_name=model_choice,
-                    use_dev_set=use_dev_set,
-                    use_hyperparameter_tuning=tune,
-                    handle_class_imbalance=balance,
-                    ngram_range=(ngram_min, ngram_max),
-                    embedding_dim=embedding_dim,
-                    save_results=True  # Lưu kết quả
-                )
+                all_results = {}
+                comparison_data = []
                 
-                st.success("Thí nghiệm hoàn thành!")
+                # Processar cada modelo selecionado
+                for model_choice in models_to_compare:
+                    st.write(f"Đang huấn luyện mô hình: **{model_choice}**...")
+                    
+                    experiment_results = run_experiment(
+                        preprocessing_pipeline=preprocessing_pipeline,
+                        vectorization_method=vectorization_method,
+                        model_name=model_choice,
+                        use_dev_set=use_dev_set,
+                        use_hyperparameter_tuning=tune,
+                        handle_class_imbalance=balance,
+                        ngram_range=(ngram_min, ngram_max),
+                        embedding_dim=embedding_dim,
+                        save_results=True
+                    )
+                    
+                    # Guardar resultados para comparação
+                    results = experiment_results["results"]
+                    all_results[model_choice] = experiment_results
+                    
+                    # Adicionar dados para comparação
+                    comparison_data.append({
+                        'model': model_choice,
+                        'accuracy': results['accuracy'],
+                        'f1_macro': results['f1_macro'],
+                        'f1_weighted': results['f1_weighted']
+                    })
                 
-                # Hiển thị kết quả
-                results = experiment_results["results"]
+                # Salvar o último modelo no session state para predição
+                if models_to_compare:
+                    last_model = models_to_compare[-1]
+                    st.session_state.last_experiment = all_results[last_model]
+                    st.session_state.last_experiment_name = all_results[last_model]["experiment_name"]
+                    st.session_state.model = all_results[last_model]["model"]
+                    st.session_state.vectorizer = all_results[last_model]["vectorizer"]
                 
-                # Hiển thị metrics
-                col1, col2, col3 = st.columns(3)
-                col1.metric("Accuracy", f"{results['accuracy']:.3f}")
-                col2.metric("F1 Macro", f"{results['f1_macro']:.3f}")
-                col3.metric("F1 Weighted", f"{results['f1_weighted']:.3f}")
+                # Mostrar comparação de resultados
+                st.success(f"Todos os {len(models_to_compare)} modelos foram treinados com sucesso!")
                 
-                # Hiển thị confusion matrix
-                st.subheader("Ma trận nhầm lẫn")
+                # Criar DataFrame de comparação
+                comparison_df = pd.DataFrame(comparison_data)
+                
+                # Mostrar tabela de comparação
+                st.subheader("Comparação de modelos")
+                st.dataframe(comparison_df.style.highlight_max(axis=0, subset=['accuracy', 'f1_macro', 'f1_weighted']))
+                
+                # Mostrar gráfico de comparação
+                st.subheader("Comparação de desempenho")
+                fig, ax = plt.subplots(figsize=(12, 6))
+                comparison_melted = pd.melt(comparison_df, 
+                                        id_vars=['model'], 
+                                        value_vars=['accuracy', 'f1_macro', 'f1_weighted'],
+                                        var_name='metric', value_name='score')
+                sns.barplot(data=comparison_melted, x='model', y='score', hue='metric', ax=ax)
+                plt.title('Comparação de métricas entre modelos')
+                plt.xticks(rotation=45)
+                plt.tight_layout()
+                st.pyplot(fig)
+                
+                # Mostrar detalhes do melhor modelo
+                best_model_idx = comparison_df['f1_macro'].idxmax()
+                best_model_name = comparison_df.iloc[best_model_idx]['model']
+                best_model_results = all_results[best_model_name]
+                
+                st.subheader(f"Detalhes do melhor modelo: {best_model_name}")
+                
+                # Mostrar matriz de confusão do melhor modelo
+                st.write("**Matriz de confusão:**")
                 fig, ax = plt.figure(figsize=(10, 8)), plt.axes()
-                sns.heatmap(results['confusion_matrix'], annot=True, fmt='d', ax=ax)
+                sns.heatmap(best_model_results['results']['confusion_matrix'], annot=True, fmt='d', ax=ax)
                 plt.ylabel('Thực tế')
                 plt.xlabel('Dự đoán')
                 st.pyplot(fig)
-                
-                # Hiển thị báo cáo phân loại
-                st.subheader("Báo cáo phân loại chi tiết")
-                st.json(results.get("classification_report", {}))
-                
-                # Lưu kết quả vào session state
-                st.session_state.last_experiment = experiment_results
-                st.session_state.last_experiment_name = experiment_results["experiment_name"]
-                st.session_state.model = experiment_results["model"]
-                st.session_state.vectorizer = experiment_results["vectorizer"]
                 
             except Exception as e:
                 st.error(f"Lỗi khi chạy thí nghiệm: {str(e)}")

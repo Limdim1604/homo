@@ -1,0 +1,68 @@
+{
+  "accuracy": 0.5658578856152513,
+  "f1_macro": 0.4267977018593905,
+  "f1_weighted": 0.545441848239853,
+  "class_report": {
+    "NEG": {
+      "precision": 0.49859943977591037,
+      "recall": 0.45408163265306123,
+      "f1-score": 0.4753004005340454,
+      "support": 392.0
+    },
+    "NEU": {
+      "precision": 0.6214765100671141,
+      "recall": 0.7291338582677165,
+      "f1-score": 0.6710144927536232,
+      "support": 635.0
+    },
+    "POS": {
+      "precision": 0.23076923076923078,
+      "recall": 0.09448818897637795,
+      "f1-score": 0.1340782122905028,
+      "support": 127.0
+    },
+    "accuracy": 0.5658578856152513,
+    "macro avg": {
+      "precision": 0.4502817268707518,
+      "recall": 0.4259012266323852,
+      "f1-score": 0.4267977018593905,
+      "support": 1154.0
+    },
+    "weighted avg": {
+      "precision": 0.536738523910283,
+      "recall": 0.5658578856152513,
+      "f1-score": 0.545441848239853,
+      "support": 1154.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      178,
+      201,
+      13
+    ],
+    [
+      145,
+      463,
+      27
+    ],
+    [
+      34,
+      81,
+      12
+    ]
+  ],
+  "experiment_config": {
+    "preprocessing_pipeline": "basic",
+    "vectorization_method": "bow",
+    "model_name": "logistic_regression",
+    "use_dev_set": false,
+    "use_hyperparameter_tuning": false,
+    "handle_class_imbalance": false,
+    "ngram_range": [
+      1,
+      1
+    ],
+    "execution_time": 0.9297943115234375
+  }
+}
